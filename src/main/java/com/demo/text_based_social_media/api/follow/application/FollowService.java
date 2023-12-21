@@ -10,9 +10,12 @@ import com.demo.text_based_social_media.api.user.authentication.application.port
 import com.demo.text_based_social_media.api.user.details.domain.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -31,7 +34,16 @@ public class FollowService implements ReadFollowUseCase, SaveFollowUseCase {
 
     @Override
     public List<Follow> getAllByFollowerId(Long followerId) {
-        return followReadPort.getAllByFollowerId(followerId);
+        return followReadPort.getAllByFollowerId(followerId).stream()
+                .peek(follow -> follow.setFollowing(readUserPort.readUserById(follow.getFollowingId())))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Follow> getAllByFollowingId(Long followingId) {
+        return followReadPort.getAllByFollowingId(followingId).stream()
+                .peek(follow -> follow.setFollower(readUserPort.readUserById(follow.getFollowerId())))
+                .collect(Collectors.toList());
     }
 
 
@@ -42,6 +54,8 @@ public class FollowService implements ReadFollowUseCase, SaveFollowUseCase {
         follow.setFollowerId(userId);
         follow.setFollowingId(followingUser.getId());
         follow.setFollowing(followingUser);
+        if (follow.getFollowingId().longValue() == follow.getFollowerId().longValue())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't follow yourself...");
         followSavePort.save(follow);
     }
 

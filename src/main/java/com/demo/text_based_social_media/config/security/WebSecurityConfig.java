@@ -64,6 +64,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/role/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated());
 
 

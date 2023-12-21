@@ -40,6 +40,18 @@ public class FollowAdapter implements FollowReadPort, FollowSavePort {
     }
 
     @Override
+    public List<Follow> getAllByFollowingId(Long followingId) {
+        return followRepository.getAllByFollowingId(followingId).stream()
+                .map(followMapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Long> getFollowingIdsByFollowerId(Long followerId) {
+        return followRepository.getFollowingIdsByFollowerId(followerId);
+    }
+
+    @Override
     public void save(Follow follow) {
         if (followRepository.existsByFollowerIdAndFollowingId(follow.getFollowerId(), follow.getFollowingId()))
             throw new RuntimeException("You already follow " + follow.getFollowing().getEmail());

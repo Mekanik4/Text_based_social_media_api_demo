@@ -1,6 +1,7 @@
 package com.demo.text_based_social_media.mapper;
 
 import com.demo.text_based_social_media.api.follow.adapter.in.dto.FollowDto;
+import com.demo.text_based_social_media.api.follow.adapter.in.dto.FollowViewDto;
 import com.demo.text_based_social_media.api.follow.domain.Follow;
 import com.demo.text_based_social_media.entity.FollowEntity;
 import org.mapstruct.Mapper;
@@ -21,6 +22,9 @@ public interface FollowMapper {
 
     FollowEntity fromDomain(Follow follow);
 
-    @Mapping(target = "followingName", source = "following.email")
-    FollowDto dtoFromDomain(Follow follow);
+    @Mapping(target = "email", source = "following.email")
+    FollowViewDto followingDtoFromDomain(Follow follow);
+
+    @Mapping(target = "email", source = "follower.email")
+    FollowViewDto followerDtoFromDomain(Follow follow);
 }

@@ -9,4 +9,6 @@ public interface ReadFollowUseCase {
     Follow getFollowById(Long id);
 
     List<Follow> getAllByFollowerId(Long followerId);
+
+    List<Follow> getAllByFollowingId(Long followingId);
 }

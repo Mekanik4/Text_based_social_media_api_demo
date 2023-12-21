@@ -15,6 +15,11 @@ public interface FollowRepository extends JpaRepository<FollowEntity, Long> {
     @Query(value = "SELECT DISTINCT f FROM FollowEntity f WHERE f.followerId = :followerId")
     List<FollowEntity> getAllByFollowerId(Long followerId);
 
+    List<FollowEntity> getAllByFollowingId(Long followingId);
+
+    @Query(value = "SELECT DISTINCT f.followingId FROM FollowEntity f WHERE f.followerId = :followerId")
+    List<Long> getFollowingIdsByFollowerId(Long followerId);
+
     Optional<FollowEntity> getByFollowerIdAndFollowingId(Long followerId, Long followingId);
     boolean existsByFollowerIdAndFollowingId(Long followerId, Long followingId);
 

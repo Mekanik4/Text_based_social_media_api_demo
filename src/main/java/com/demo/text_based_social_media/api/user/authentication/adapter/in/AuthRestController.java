@@ -27,7 +27,7 @@ public class AuthRestController {
     private final LoginUseCase loginUseCase;
     
     @PostMapping("/signup")
-    public ResponseEntity<?> signUpUser(@RequestBody SignUpRequestDto signUpRequestDto){
+    public ResponseEntity<String> signUpUser(@RequestBody SignUpRequestDto signUpRequestDto){
         signUpUseCase.signUpUser(AuthRestControllerMapper.INSTANCE.toDomain(signUpRequestDto));
         return ResponseEntity.ok("User sign up successful");
     }

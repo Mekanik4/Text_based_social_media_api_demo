@@ -11,4 +11,8 @@ public interface FollowReadPort {
     Follow getFollowByFollowerIdAndFollowingId(Long followerId, Long followingId);
 
     List<Follow> getAllByFollowerId(Long followerId);
+
+    List<Follow> getAllByFollowingId(Long followingId);
+
+    List<Long> getFollowingIdsByFollowerId(Long followerId);
 }

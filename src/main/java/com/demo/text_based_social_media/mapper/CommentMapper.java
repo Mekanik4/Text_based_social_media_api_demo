@@ -1,10 +1,15 @@
 package com.demo.text_based_social_media.mapper;
 
 import com.demo.text_based_social_media.api.comment.adapter.in.dto.CommentDto;
+import com.demo.text_based_social_media.api.comment.adapter.in.dto.CommentViewDto;
+import com.demo.text_based_social_media.api.comment.adapter.in.dto.LatestCommentViewDto;
 import com.demo.text_based_social_media.api.comment.domain.Comment;
+import com.demo.text_based_social_media.api.post.adapter.in.dto.PostViewDto;
+import com.demo.text_based_social_media.api.post.domain.Post;
 import com.demo.text_based_social_media.entity.CommentEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 @Mapper(uses = {UserMapper.class, PostMapper.class, RoleMapper.class})
 public interface CommentMapper {
@@ -25,4 +30,14 @@ public interface CommentMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "postId", source = "postId")
     CommentEntity fromDomain(Comment comment);
+
+    @Mapping(target = "email", source = "user.email")
+    CommentViewDto viewDtoFromDomain(Comment comment);
+
+    @Mapping(source = "post", target = "post", qualifiedByName = "postViewDtoFromDomain")
+    LatestCommentViewDto latestCommentsDtoFromDomain(Comment comment);
+
+    @Named("postViewDtoFromDomain")
+    @Mapping(target = "email", source = "user.email")
+    PostViewDto postViewDtoFromDomain(Post post);
 }

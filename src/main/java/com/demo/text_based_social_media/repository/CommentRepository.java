@@ -11,9 +11,12 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     @Query(value = "SELECT DISTINCT c FROM CommentEntity c WHERE c.userId = :userId")
     List<CommentEntity> findAllByUserId(Long userId);
 
-//    @Query(value = "SELECT DISTINCT c FROM CommentEntity c JOIN FETCH c.post p WHERE c.creatorId = :userId AND p.id = :postId")
-//    List<CommentEntity> findAllByUserIdAndPostId(Long userId, Long postId);
+    @Query(value = "SELECT DISTINCT c FROM CommentEntity c WHERE c.postId = :postId ORDER BY c.postedAt DESC LIMIT 100")
+    List<CommentEntity> findAllByPostId(Long postId);
 
     @Query(value = "SELECT COUNT(c) FROM CommentEntity c WHERE c.userId = :userId AND c.postId = :postId")
     int countByUserIdAndPostId(Long userId, Long postId);
+
+    @Query(value = "SELECT DISTINCT c FROM CommentEntity c WHERE c.userId = :userId AND c.postId = :postId ORDER BY c.postedAt DESC LIMIT 1")
+    CommentEntity findLatestCommentByUserIdAndPostId(Long userId, Long postId);
 }

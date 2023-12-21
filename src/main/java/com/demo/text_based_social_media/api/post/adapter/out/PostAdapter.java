@@ -9,6 +9,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Repository
 @Transactional
@@ -21,6 +24,30 @@ public class PostAdapter implements PostReadPort, PostSavePort {
     public Post getPostById(Long id) {
         return postMapper.toDomain(postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Can't find post with id " + id)));
+    }
+
+    @Override
+    public List<Post> getAllPostsByUserId(Long userId) {
+        return postRepository.findAllByUserIdOrderByPostedAtDesc(userId).stream()
+                .map(postMapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Post> getAllFollowingPosts(List<Long> userIds) {
+        return postRepository.findAllByUserIdInOrderByPostedAtDesc(userIds).stream()
+                .map(postMapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Long> getPostIdsByUserId(Long userId) {
+        return postRepository.findPostIdsByUserId(userId);
+    }
+
+    @Override
+    public List<Long> getPostIdsByFollowingIds(List<Long> followingIds) {
+        return postRepository.findPostIdsByFollowingIds(followingIds);
     }
 
     @Override
