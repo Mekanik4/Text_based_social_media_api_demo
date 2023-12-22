@@ -6,7 +6,9 @@ import com.demo.text_based_social_media.api.role.domain.Role;
 import com.demo.text_based_social_media.mapper.RoleMapper;
 import com.demo.text_based_social_media.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 @Repository
@@ -18,7 +20,7 @@ public class RoleAdapter implements RoleReadPort, RoleSavePort {
     @Override
     public Role getRoleByName(final String name) {
         return roleMapper.toDomain(roleRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Can't find role with name " + name)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't find role with name " + name)));
     }
 
     @Override
@@ -31,15 +33,4 @@ public class RoleAdapter implements RoleReadPort, RoleSavePort {
     public void save(final Role role) {
         roleRepository.save(roleMapper.fromDomain(role));
     }
-
-//    @Mapper
-//    abstract static class RoleAdapterMapper {
-//        public static final RoleAdapterMapper INSTANCE = Mappers.getMapper(RoleAdapterMapper.class);
-//
-//        abstract Role toDomain(RoleEntity roleEntity);
-//
-//        @Mapping(target = "id", ignore = true)
-//        abstract RoleEntity fromDomain(Role role);
-//    }
-
 }

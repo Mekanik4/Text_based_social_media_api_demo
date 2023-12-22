@@ -1,24 +1,13 @@
-logging:
-  level:
-    ROOT: info
-server:
-  port: ${API_PORT:8081}
-  error:
-    include-message: always
-  servlet:
-    context-path: "${CONTEXT_PATH:/}"
 spring:
-  profiles:
-    active: ${ACTIVE_PROFILES:development}
   datasource:
-    url: "jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_CATALOG:demo_social_media}"
+    url: "jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_CATALOG:demo_social_media_test}"
     username: "${DB_USERNAME:postgres}"
     password: "${DB_PASSWORD:postgres}"
     hikari:
       minimum-idle: 1
       maximum-pool-size: 50
       idle-timeout: 60000
-      pool-name: "demo-social-media-api-db-connection-pool"
+      pool-name: "demo-social-media-api-test-db-connection-pool"
   jpa:
     open-in-view: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -37,9 +26,3 @@ spring:
   sql:
     init:
       mode: never
-
-security:
-  jwt:
-    secret: ${AUTH_JWT_SECRET:social-media-demo-secret-key}
-    expiresAfterMs: 172800000
-    cookieName: socialMediaDemo

@@ -5,7 +5,9 @@ import com.demo.text_based_social_media.api.user.details.domain.UserView;
 import com.demo.text_based_social_media.mapper.UserMapper;
 import com.demo.text_based_social_media.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 @Repository
@@ -18,16 +20,6 @@ public class UserViewAdapter implements UserViewPort {
     public UserView getUserById(final Long id) {
         return userMapper
             .fromEntity(userRepository.findById(id)
-                                      .orElseThrow(() -> new RuntimeException("User not found with id " + id)));
+                                      .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User not found with id " + id)));
     }
-    
-//    @Mapper
-//    abstract static class UserViewAdapterMapper {
-//
-//        private static final UserViewAdapterMapper INSTANCE = Mappers.getMapper(UserViewAdapterMapper.class);
-//
-//        abstract UserView fromEntity(UserEntity userEntity);
-//
-//    }
-    
 }

@@ -10,8 +10,10 @@ import com.demo.text_based_social_media.api.user.details.domain.UserCreateReques
 import com.demo.text_based_social_media.entity.RoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.regex.Pattern;
 
@@ -31,9 +33,9 @@ public class SignUpService implements SignUpUseCase {
     @Override
     public void signUpUser(final SignUpRequest signUpRequest) {
         if (!isEmailValid(signUpRequest.getEmail()))
-            throw new RuntimeException("Invalid email address: " + signUpRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email address: " + signUpRequest.getEmail());
         if (readUserPort.existsByEmail(signUpRequest.getEmail()))
-            throw new RuntimeException("User with email " + signUpRequest.getEmail() + " already exists");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with email " + signUpRequest.getEmail() + " already exists");
 
         UserCreateRequest newUser = new UserCreateRequest();
         newUser.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));

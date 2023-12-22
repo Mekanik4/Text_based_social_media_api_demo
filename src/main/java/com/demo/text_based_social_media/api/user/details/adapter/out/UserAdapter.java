@@ -12,7 +12,9 @@ import com.demo.text_based_social_media.repository.RoleRepository;
 import com.demo.text_based_social_media.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -30,14 +32,14 @@ public class UserAdapter implements ReadUserPort, WriteUserPort {
     @Override
     public User readUserByEmail(String email) {
         return userMapper.toDomain(userRepository.findByEmail(email).orElseThrow(
-            () -> new RuntimeException("User with email " + email + " not found")
+            () -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User with email " + email + " not found")
         ));
     }
 
     @Override
     public User readUserById(Long id) {
         return userMapper.toDomain(userRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("User with id " + id + " not found")
+                () -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User with id " + id + " not found")
         ));
     }
 
@@ -56,7 +58,6 @@ public class UserAdapter implements ReadUserPort, WriteUserPort {
     public void create(UserCreateRequest userCreateRequest) {
         String role = userCreateRequest.getRole();
         
-        // we need to parse the role entities to add to the user entity
         Optional<RoleEntity> roleEntity = roleRepository.findByName(role);
         UserEntity newUser = userMapper.fromDomain(userCreateRequest);
         if (roleEntity.isEmpty())
@@ -64,25 +65,4 @@ public class UserAdapter implements ReadUserPort, WriteUserPort {
         else newUser.setRole(roleEntity.get());
         userRepository.save(newUser);
     }
-    
-    
-//    @Mapper
-//    abstract static class UserAdapterMapper {
-//
-//        private static final UserAdapterMapper INSTANCE = Mappers.getMapper(UserAdapterMapper.class);
-//
-//        abstract User toDomain(UserEntity userEntity);
-//
-//        @Mapping(target = "id", ignore = true)
-//        @Mapping(target = "role", ignore = true)
-//        abstract UserEntity fromDomain(UserCreateRequest userCreateRequest);
-//
-//        @Mapping(target = "id", ignore = true)
-//        abstract UserEntity fromDomain(User user);
-//
-////        @Mapping(target = "id", ignore = true)
-////        abstract RoleEntity fromDomain(Role role);
-//
-//    }
-    
 }

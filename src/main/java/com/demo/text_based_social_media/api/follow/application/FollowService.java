@@ -52,6 +52,7 @@ public class FollowService implements ReadFollowUseCase, SaveFollowUseCase {
         User followingUser = readUserPort.readUserByEmail(followDto.getFollowingName());
         Follow follow = new Follow();
         follow.setFollowerId(userId);
+        follow.setFollower(readUserPort.readUserById(userId));
         follow.setFollowingId(followingUser.getId());
         follow.setFollowing(followingUser);
         if (follow.getFollowingId().longValue() == follow.getFollowerId().longValue())
@@ -61,6 +62,8 @@ public class FollowService implements ReadFollowUseCase, SaveFollowUseCase {
 
     @Override
     public void deleteFollow(FollowDto followDto, Long userId) {
+        if (!readUserPort.existsByEmail(followDto.getFollowingName()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with email " + followDto.getFollowingName() + " doesn't exists.");
         followSavePort.delete(userId, readUserPort.readUserByEmail(followDto.getFollowingName()).getId());
     }
 }

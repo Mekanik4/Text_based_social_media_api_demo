@@ -9,6 +9,7 @@ import com.demo.text_based_social_media.config.security.jwt.JwtUtils;
 import com.demo.text_based_social_media.config.security.services.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 @Service
@@ -49,7 +51,7 @@ public class LoginService implements LoginUseCase {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             return jwtUtils.generateJwtCookie(userDetails);
         } catch (AuthenticationException error) {
-            throw new RuntimeException("Couldn't login user with email " + loginRequest.getEmail() + ". " + error);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Couldn't login user with email " + loginRequest.getEmail() + ". " + error);
         }
         
     }

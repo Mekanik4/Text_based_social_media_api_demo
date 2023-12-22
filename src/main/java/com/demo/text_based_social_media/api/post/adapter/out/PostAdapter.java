@@ -7,7 +7,9 @@ import com.demo.text_based_social_media.mapper.PostMapper;
 import com.demo.text_based_social_media.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +25,7 @@ public class PostAdapter implements PostReadPort, PostSavePort {
     @Override
     public Post getPostById(Long id) {
         return postMapper.toDomain(postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Can't find post with id " + id)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't find post with id " + id)));
     }
 
     @Override

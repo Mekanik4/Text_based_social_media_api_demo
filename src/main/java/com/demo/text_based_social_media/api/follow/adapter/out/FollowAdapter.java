@@ -7,7 +7,9 @@ import com.demo.text_based_social_media.mapper.FollowMapper;
 import com.demo.text_based_social_media.repository.FollowRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +30,7 @@ public class FollowAdapter implements FollowReadPort, FollowSavePort {
     @Override
     public Follow getFollowByFollowerIdAndFollowingId(Long followerId, Long followingId) {
         return followMapper.toDomain(followRepository.getByFollowerIdAndFollowingId(followerId, followingId).orElseThrow(
-                () -> new RuntimeException("Follower with id " + followingId + " not found")
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Follower with id " + followingId + " not found")
         ));
     }
 
@@ -54,7 +56,7 @@ public class FollowAdapter implements FollowReadPort, FollowSavePort {
     @Override
     public void save(Follow follow) {
         if (followRepository.existsByFollowerIdAndFollowingId(follow.getFollowerId(), follow.getFollowingId()))
-            throw new RuntimeException("You already follow " + follow.getFollowing().getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You already follow " + follow.getFollowing().getEmail());
         followRepository.save(followMapper.fromDomain(follow));
     }
 
@@ -62,6 +64,6 @@ public class FollowAdapter implements FollowReadPort, FollowSavePort {
     public void delete(Long followerId, Long followingId) {
         if (followRepository.existsByFollowerIdAndFollowingId(followerId, followingId))
             followRepository.deleteByFollowerIdAndFollowingId(followerId, followingId);
-        else throw new RuntimeException("You don't follow user with id " + followingId);
+        else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You don't follow user with id " + followingId, new RuntimeException());
     }
 }
