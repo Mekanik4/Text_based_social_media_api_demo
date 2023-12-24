@@ -61,6 +61,7 @@ public class CommentService implements ReadCommentUseCase, SaveCommentUseCase {
             if (comment != null) {
                 Post post = postReadPort.getPostById(postId);
                 post.setUser(readUserPort.readUserById(post.getUserId()));
+                post.setContext(post.getContext().substring(0, 20).concat("..."));
                 comment.setPost(post);
                 latestComments.add(comment);
             }
