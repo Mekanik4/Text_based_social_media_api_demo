@@ -127,6 +127,8 @@ An automated schema generation has been implemented.
 
 The project includes a testing folder with implemented tests.
 
+On start, objects from all entities are populated in the database by default.
+
 ## Tech stack
 
 The project uses:
