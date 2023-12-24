@@ -35,6 +35,7 @@ public interface CommentMapper {
     CommentViewDto viewDtoFromDomain(Comment comment);
 
     @Mapping(source = "post", target = "post", qualifiedByName = "postViewDtoFromDomain")
+    @Mapping(target = "postedBy", source = "user.email")
     LatestCommentViewDto latestCommentsDtoFromDomain(Comment comment);
 
     @Named("postViewDtoFromDomain")

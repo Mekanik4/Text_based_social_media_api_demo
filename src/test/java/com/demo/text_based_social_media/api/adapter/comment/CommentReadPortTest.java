@@ -83,4 +83,11 @@ public class CommentReadPortTest {
         commentAdapter.save(comment);
         Assertions.assertEquals(commentAdapter.getLatestCommentByUserIdAndPostId(userId, postId).getContext(), comment.getContext());
     }
+
+    @Test
+    void shouldGetLatestCommentOnPost() {
+        Comment comment = new Comment(2L, "A new comment", userId, postId, null, null, now());
+        commentAdapter.save(comment);
+        Assertions.assertEquals(commentAdapter.getLatestCommentByPostId(postId).getContext(), comment.getContext());
+    }
 }

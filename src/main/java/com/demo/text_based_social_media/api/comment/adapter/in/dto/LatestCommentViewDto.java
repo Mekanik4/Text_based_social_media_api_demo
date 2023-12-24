@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class LatestCommentViewDto {
 
+    private String postedBy = "";
+
     private String context = "";
 
     private LocalDateTime postedAt;

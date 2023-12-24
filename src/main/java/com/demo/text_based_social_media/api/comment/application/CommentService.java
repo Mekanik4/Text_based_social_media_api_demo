@@ -53,7 +53,6 @@ public class CommentService implements ReadCommentUseCase, SaveCommentUseCase {
     public List<Comment> getLatestCommentsByUserId(Long userId) {
         List<Long> postIds = postReadPort.getPostIdsByFollowingIds(followReadPort.getFollowingIdsByFollowerId(userId));
         postIds.addAll(postReadPort.getPostIdsByUserId(userId));
-        System.out.println(postIds);
 
         List<Comment> latestComments = new ArrayList<>();
         for (Long postId: postIds) {
@@ -61,8 +60,30 @@ public class CommentService implements ReadCommentUseCase, SaveCommentUseCase {
             if (comment != null) {
                 Post post = postReadPort.getPostById(postId);
                 post.setUser(readUserPort.readUserById(post.getUserId()));
-                post.setContext(post.getContext().substring(0, 20).concat("..."));
+                if (post.getContext().length() > 20)
+                    post.setContext(post.getContext().substring(0, 20).concat("..."));
                 comment.setPost(post);
+                latestComments.add(comment);
+            }
+        }
+        return latestComments;
+    }
+
+    @Override
+    public List<Comment> getLatestComments(Long userId) {
+        List<Long> postIds = postReadPort.getPostIdsByFollowingIds(followReadPort.getFollowingIdsByFollowerId(userId));
+        postIds.addAll(postReadPort.getPostIdsByUserId(userId));
+
+        List<Comment> latestComments = new ArrayList<>();
+        for (Long postId: postIds) {
+            Comment comment = commentReadPort.getLatestCommentByPostId(postId);
+            if (comment != null) {
+                Post post = postReadPort.getPostById(postId);
+                post.setUser(readUserPort.readUserById(post.getUserId()));
+                if (post.getContext().length() > 20)
+                    post.setContext(post.getContext().substring(0, 20).concat("..."));
+                comment.setPost(post);
+                comment.setUser(readUserPort.readUserById(comment.getUserId()));
                 latestComments.add(comment);
             }
         }

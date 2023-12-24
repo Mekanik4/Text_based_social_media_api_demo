@@ -9,4 +9,6 @@ public interface ReadCommentUseCase {
     int countCommentsByUserIdAndPostId(Long userId, Long postId);
 
     List<Comment> getLatestCommentsByUserId(Long userId);
+
+    List<Comment> getLatestComments(Long userId);
 }

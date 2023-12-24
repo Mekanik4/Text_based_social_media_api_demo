@@ -11,4 +11,6 @@ public interface CommentReadPort {
     List<Comment> getCommentsByPostId(Long postId);
 
     Comment getLatestCommentByUserIdAndPostId(Long userId, Long postId);
+
+    Comment getLatestCommentByPostId(Long postId);
 }

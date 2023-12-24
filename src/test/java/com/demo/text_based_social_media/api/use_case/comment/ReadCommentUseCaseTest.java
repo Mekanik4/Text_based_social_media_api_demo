@@ -83,7 +83,7 @@ public class ReadCommentUseCaseTest {
         followAdapter.save(new Follow(1L, userId, followingId, null, null));
         Post post = new Post(2L, "A new post from following", followingId, null, null, now());
         postService.savePost(post);
-        Long followingPostId = postId = postService.getAllPostsByUserId(followingId).get(0).getId();
+        Long followingPostId = postService.getAllPostsByUserId(followingId).get(0).getId();
         Comment comment = new Comment(2L, "A new comment to following post", userId, followingPostId, null, null, now());
         commentService.saveComment(comment);
         Assertions.assertEquals(commentService.getLatestCommentsByUserId(userId).size(), 2);
@@ -94,9 +94,35 @@ public class ReadCommentUseCaseTest {
         latestComments.forEach(comment1 -> {
                     if (comment1.getPostId().longValue() == postId)
                         Assertions.assertEquals(comment1.getContext(), "A new comment to user's post");
-                    if (comment1.getUserId().longValue() == followingPostId)
+                    if (comment1.getPostId().longValue() == followingPostId)
                         Assertions.assertEquals(comment1.getContext(), "A new comment to following post");
                 });
+
+
+    }
+
+    @Test
+    void shouldGetLatestComments() {
+        SignUpRequest signUpRequest = new SignUpRequest("testuser2@demo.com", "12345678", "USER", false);
+        signUpService.signUpUser(signUpRequest);
+        Long followingId = userAdapter.readUserByEmail(signUpRequest.getEmail()).getId();
+        followAdapter.save(new Follow(1L, userId, followingId, null, null));
+        Post post = new Post(2L, "A new post from following", followingId, null, null, now());
+        postService.savePost(post);
+        Long followingPostId = postService.getAllPostsByUserId(followingId).get(0).getId();
+        Comment comment = new Comment(2L, "A new comment to following post", userId, followingPostId, null, null, now());
+        commentService.saveComment(comment);
+        Assertions.assertEquals(commentService.getLatestComments(userId).size(), 2);
+        Comment newComment = new Comment(3L, "A new comment to user's post from following", followingId, postId, null, null, now());
+        commentService.saveComment(newComment);
+        List<Comment> latestComments = commentService.getLatestComments(userId);
+        Assertions.assertEquals(latestComments.size(), 2);
+        latestComments.forEach(comment1 -> {
+            if (comment1.getPostId().longValue() == postId)
+                Assertions.assertEquals(comment1.getContext(), "A new comment to user's post from following");
+            if (comment1.getPostId().longValue() == followingPostId)
+                Assertions.assertEquals(comment1.getContext(), "A new comment to following post");
+        });
 
 
     }

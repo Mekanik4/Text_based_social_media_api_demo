@@ -39,4 +39,12 @@ public class CommentRestController {
                 .map(commentMapper::latestCommentsDtoFromDomain)
                 .collect(Collectors.toList());
     }
+
+    @GetMapping("/users/me/posts/comments/latest")
+    public List<LatestCommentViewDto> getAllLatestComments(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        Long userId = userDetails.getId();
+        return readCommentUseCase.getLatestComments(userId).stream()
+                .map(commentMapper::latestCommentsDtoFromDomain)
+                .collect(Collectors.toList());
+    }
 }

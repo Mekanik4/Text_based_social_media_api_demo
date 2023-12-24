@@ -88,4 +88,12 @@ public class CommentRestControllerTest {
                         .header("authorization", token.substring(10, token.length() - 2)))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void shouldGetLatestCommentsOnAllPost() throws Exception {
+        mockMvc.perform(get("/users/me/posts/comments/latest")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("authorization", token.substring(10, token.length() - 2)))
+                .andExpect(status().isOk());
+    }
 }

@@ -46,4 +46,9 @@ public class CommentAdapter implements CommentReadPort, CommentSavePort {
     public Comment getLatestCommentByUserIdAndPostId(Long userId, Long postId) {
         return commentMapper.toDomain(commentRepository.findLatestCommentByUserIdAndPostId(userId, postId));
     }
+
+    @Override
+    public Comment getLatestCommentByPostId(Long postId) {
+        return commentMapper.toDomain(commentRepository.findLatestCommentByPostId(postId));
+    }
 }
