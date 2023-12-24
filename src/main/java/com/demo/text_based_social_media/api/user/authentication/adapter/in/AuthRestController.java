@@ -29,7 +29,7 @@ public class AuthRestController {
     @PostMapping("/signup")
     public ResponseEntity<String> signUpUser(@RequestBody SignUpRequestDto signUpRequestDto){
         signUpUseCase.signUpUser(AuthRestControllerMapper.INSTANCE.toDomain(signUpRequestDto));
-        return ResponseEntity.ok("User sign up successful");
+        return ResponseEntity.ok("User signed up successfully");
     }
     
     @PostMapping("/login")

@@ -26,3 +26,10 @@ spring:
   sql:
     init:
       mode: never
+  flyway:
+    enabled: true
+    schemas: "public"
+    locations: "filesystem:src/test/resources/database"
+    validate-migration-naming: true
+    clean-disabled: false
+    clean-on-validation-error: true
